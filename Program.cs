@@ -17,6 +17,10 @@ if (!Directory.Exists(directory))
     return;
 }
 
+DirectoryInfo directoryInfo = new DirectoryInfo(directory);
+long directorySize = await Task.Run(() => directoryInfo.EnumerateFiles("*", SearchOption.AllDirectories).Sum(file => file.Length));
+Console.WriteLine($"Size of {directory} is {Utils.GetSizeText(directorySize)}");
+
 string[] files = Directory.GetFiles(directory);
 string[] folders = Directory.GetDirectories(directory);
 
@@ -29,25 +33,8 @@ foreach (string file in files)
     try
     {
         float sizeInBytes = info.Length;
-        string size = Math.Floor(sizeInBytes) + " B";
 
-        if (sizeInBytes > 1024 * 1024 * 1024)
-        {
-            float newSize = sizeInBytes / (1024 * 1024 * 1024);
-            size = Math.Floor(newSize) + " GB";
-        }
-        else if (sizeInBytes > 1024 * 1024)
-        {
-            float newSize = sizeInBytes / (1024 * 1024);
-            size = Math.Floor(newSize) + " MB";
-        }
-        else if (sizeInBytes > 1024)
-        {
-            float newSize = sizeInBytes / 1024;
-            size = Math.Floor(newSize) + " KB";
-        }
-
-        fileObjects.Add(new FileObject(info, info.Name, file, sizeInBytes, size));
+        fileObjects.Add(new FileObject(info, info.Name, file, sizeInBytes, Utils.GetSizeText(sizeInBytes)));
     }
     catch
     {
@@ -63,25 +50,8 @@ foreach (string folder in folders)
     try
     {
         long sizeInBytes = await Task.Run(() => info.EnumerateFiles("*", SearchOption.AllDirectories).Sum(file => file.Length));
-        string size = MathF.Round(sizeInBytes) + " B";
 
-        if (sizeInBytes > 1024 * 1024 * 1024)
-        {
-            float newSize = sizeInBytes / (1024 * 1024 * 1024);
-            size = Math.Floor(newSize) + " GB";
-        }
-        else if (sizeInBytes > 1024 * 1024)
-        {
-            float newSize = sizeInBytes / (1024 * 1024);
-            size = Math.Floor(newSize) + " MB";
-        }
-        else if (sizeInBytes > 1024)
-        {
-            float newSize = sizeInBytes / 1024;
-            size = Math.Floor(newSize) + " KB";
-        }
-
-        fileObjects.Add(new FileObject(info, info.Name, folder, sizeInBytes, size));
+        fileObjects.Add(new FileObject(info, info.Name, folder, sizeInBytes, Utils.GetSizeText(sizeInBytes)));
     }
     catch
     {
