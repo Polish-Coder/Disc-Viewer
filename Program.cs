@@ -1,5 +1,12 @@
 ﻿using Disc_Viewer.src.scripts;
 
+string colorYellow = "\x1b[33m";
+string colorBlue = "\u001b[1;34m";
+string colorCyan = "\x1b[36m";
+string colorWhite = "\x1b[37m";
+string colorRed = "\x1b[31m";
+string colorReset = "\u001b[0m";
+
 Console.WriteLine("Welcome to Disc Viewer!\nPlease enter folder directory");
 
 string directory = Console.ReadLine();
@@ -44,7 +51,7 @@ foreach (string file in files)
     }
     catch
     {
-        Console.WriteLine("Error -> " + file);
+        Console.WriteLine(colorRed + "Error -> " + file + colorReset);
         continue;
     }
 }
@@ -78,16 +85,10 @@ foreach (string folder in folders)
     }
     catch
     {
-        Console.WriteLine("Error -> " + folder);
+        Console.WriteLine(colorRed + "Error -> " + folder + colorReset);
         continue;
     }
 }
-
-string colorYellow = "\x1b[33m";
-string colorBlue = "\u001b[1;34m";
-string colorCyan = "\x1b[36m";
-string colorWhite = "\x1b[37m";
-string colorReset = "\u001b[0m";
 
 fileObjects.Sort((x, y) => y.SizeInBytes.CompareTo(x.SizeInBytes));
 
