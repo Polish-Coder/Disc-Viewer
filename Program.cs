@@ -37,7 +37,28 @@ if (Directory.Exists(directory))
 
     foreach (string folder in folders)
     {
-        Console.WriteLine(folder);
+        DirectoryInfo info = new DirectoryInfo(folder);
+
+        long sizeInBytes = await Task.Run(() => info.EnumerateFiles("*", SearchOption.AllDirectories).Sum(file => file.Length));
+        string size = MathF.Round(sizeInBytes) + " B";
+
+        if (sizeInBytes > 1024 * 1024 * 1024)
+        {
+            float newSize = sizeInBytes / (1024 * 1024 * 1024);
+            size = Math.Floor(newSize) + " GB";
+        }
+        else if (sizeInBytes > 1024 * 1024)
+        {
+            float newSize = sizeInBytes / (1024 * 1024);
+            size = Math.Floor(newSize) + " MB";
+        }
+        else if (sizeInBytes > 1024)
+        {
+            float newSize = sizeInBytes / 1024;
+            size = Math.Floor(newSize) + " KB";
+        }
+
+        Console.WriteLine(folder + " - " + size);
     }
 }
 else
