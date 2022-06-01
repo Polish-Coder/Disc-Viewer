@@ -38,7 +38,7 @@ foreach (string file in files)
         size = Math.Floor(newSize) + " KB";
     }
 
-    fileObjects.Add(new FileObject(info, file, sizeInBytes, size));
+    fileObjects.Add(new FileObject(info, info.Name, file, sizeInBytes, size));
 }
 
 foreach (string folder in folders)
@@ -64,16 +64,20 @@ foreach (string folder in folders)
         size = Math.Floor(newSize) + " KB";
     }
 
-    fileObjects.Add(new FileObject(info, folder, sizeInBytes, size));
+    fileObjects.Add(new FileObject(info, info.Name, folder, sizeInBytes, size));
 }
 
 string colorYellow = "\x1b[33m";
+string colorBlue = "\u001b[1;34m";
 string colorCyan = "\x1b[36m";
 string colorWhite = "\x1b[37m";
+string colorReset = "\u001b[0m";
 
 fileObjects.Sort((x, y) => y.SizeInBytes.CompareTo(x.SizeInBytes));
 
 for (int i = 0; i < fileObjects.Count; i++)
 {
-    Console.WriteLine($"{colorCyan}{fileObjects[i].Directory}{colorWhite} - {colorYellow}{fileObjects[i].Size}{colorWhite}");
+    string filePath = $"{colorBlue}{fileObjects[i].Directory[..^fileObjects[i].Name.Length]}{colorReset}{colorCyan}{fileObjects[i].Name}";
+
+    Console.WriteLine($"{filePath}{colorWhite} - {colorYellow}{fileObjects[i].Size}{colorWhite}");
 }
