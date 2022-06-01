@@ -3,7 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32319.34
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disc Viewer", "Disc Viewer.csproj", "{F19D3AD5-6F0E-471C-AB6D-B615FFA5CD38}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Disc Viewer", "Disc Viewer.csproj", "{F19D3AD5-6F0E-471C-AB6D-B615FFA5CD38}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{97CCE5CE-8E48-43C4-BF07-28E392AAD764}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

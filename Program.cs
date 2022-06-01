@@ -17,7 +17,7 @@ if (!Directory.Exists(directory))
     return;
 }
 
-DirectoryInfo directoryInfo = new DirectoryInfo(directory);
+DirectoryInfo directoryInfo = new(directory);
 long directorySize = await Task.Run(() => directoryInfo.EnumerateFiles("*", SearchOption.AllDirectories).Sum(file => file.Length));
 Console.WriteLine($"Size of {directory} is {Utils.GetSizeText(directorySize)}");
 
@@ -28,7 +28,7 @@ List<FileObject> fileObjects = new();
 
 foreach (string file in files)
 {
-    FileInfo info = new FileInfo(file);
+    FileInfo info = new(file);
 
     try
     {
@@ -45,7 +45,7 @@ foreach (string file in files)
 
 foreach (string folder in folders)
 {
-    DirectoryInfo info = new DirectoryInfo(folder);
+    DirectoryInfo info = new(folder);
 
     try
     {
