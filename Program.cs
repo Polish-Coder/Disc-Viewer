@@ -67,9 +67,13 @@ foreach (string folder in folders)
     fileObjects.Add(new FileObject(info, folder, sizeInBytes, size));
 }
 
+string colorYellow = "\x1b[33m";
+string colorCyan = "\x1b[36m";
+string colorWhite = "\x1b[37m";
+
 fileObjects.Sort((x, y) => y.SizeInBytes.CompareTo(x.SizeInBytes));
 
 for (int i = 0; i < fileObjects.Count; i++)
 {
-    Console.WriteLine(fileObjects[i].Directory + " - " + fileObjects[i].Size);
+    Console.WriteLine($"{colorCyan}{fileObjects[i].Directory}{colorWhite} - {colorYellow}{fileObjects[i].Size}{colorWhite}");
 }
