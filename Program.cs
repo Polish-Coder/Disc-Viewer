@@ -11,7 +11,28 @@ if (Directory.Exists(directory))
 
     foreach (string file in files)
     {
-        Console.WriteLine(file);
+        FileInfo info = new FileInfo(file);
+
+        float sizeInBytes = info.Length;
+        string size = Math.Floor(sizeInBytes) + " B";
+
+        if (sizeInBytes > 1024 * 1024 * 1024)
+        {
+            float newSize = sizeInBytes / (1024 * 1024 * 1024);
+            size = Math.Floor(newSize) + " GB";
+        }
+        else if (sizeInBytes > 1024 * 1024)
+        {
+            float newSize = sizeInBytes / (1024 * 1024);
+            size = Math.Floor(newSize) + " MB";
+        }
+        else if (sizeInBytes > 1024)
+        {
+            float newSize = sizeInBytes / 1024;
+            size = Math.Floor(newSize) + " KB";
+        }
+
+        Console.WriteLine(info.Name + " - " + size);
     }
 
     foreach (string folder in folders)
