@@ -7,7 +7,7 @@ string colorWhite = "\x1b[37m";
 string colorRed = "\x1b[31m";
 string colorReset = "\u001b[0m";
 
-Console.WriteLine("Welcome to Disc Viewer!\nPlease enter folder directory");
+Console.WriteLine(Pastel.ConsoleExtensions.Pastel("Welcome to Disc Viewer!\nPlease enter folder directory", ConsoleColor.Cyan));
 
 string directory = Console.ReadLine();
 
@@ -18,7 +18,7 @@ if (!Directory.Exists(directory))
 }
 
 DirectoryInfo directoryInfo = new(directory);
-long directorySize = await Task.Run(() => directoryInfo.EnumerateFiles("*", SearchOption.AllDirectories).Sum(file => file.Length));
+long directorySize = await Task.Run(() => directoryInfo.EnumerateFiles("*", new EnumerationOptions {IgnoreInaccessible = true, RecurseSubdirectories = true}).Sum(file => file.Length));
 Console.WriteLine($"Size of {directory} is {Utils.GetSizeText(directorySize)}");
 
 string[] files = Directory.GetFiles(directory);

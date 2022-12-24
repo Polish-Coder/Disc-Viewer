@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "ovuePkv03bjEzAsxwPwYi2+IQhiXzgsxFeL2HhnFirCjeLx/5RzQsfSyzQIRt3FgB+/eSu9Wq75onQGfWPcP6g==",
+  "dgSpecHash": "Jsvw98Vz1CXXQ+tmForPXlP5Sap9ZBgLqNW6J60PVOCrI86GU5+dtc78ADiflvvKcJV+83GsiZInoXHr+e6n8g==",
   "success": true,
   "projectFilePath": "D:\\Projects\\Applications\\Disc Viewer\\Disc Viewer.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\USER\\.nuget\\packages\\pastel\\4.1.0\\pastel.4.1.0.nupkg.sha512"
+  ],
   "logs": []
 }

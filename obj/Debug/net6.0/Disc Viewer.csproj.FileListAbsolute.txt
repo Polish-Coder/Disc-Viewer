@@ -13,3 +13,5 @@ D:\Projects\Applications\Disc Viewer\obj\Debug\net6.0\refint\Disc Viewer.dll
 D:\Projects\Applications\Disc Viewer\obj\Debug\net6.0\Disc Viewer.pdb
 D:\Projects\Applications\Disc Viewer\obj\Debug\net6.0\Disc Viewer.genruntimeconfig.cache
 D:\Projects\Applications\Disc Viewer\obj\Debug\net6.0\ref\Disc Viewer.dll
+D:\Projects\Applications\Disc Viewer\bin\Debug\net6.0\Pastel.dll
+D:\Projects\Applications\Disc Viewer\obj\Debug\net6.0\Disc Viewer.csproj.CopyComplete
