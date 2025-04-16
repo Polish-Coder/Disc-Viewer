@@ -1,32 +1,36 @@
-﻿using System.Collections;
-using Disc_Viewer.src.scripts;
+﻿using Disc_Viewer.src.scripts;
 
 public class Program
 {
     public static async Task Main()
     {
-        Console.WriteLine("Welcome to Disc Viewer!\nPlease enter folder directory");
+        Console.WriteLine("Welcome to Disc Viewer!");
         
-        string? directory = Console.ReadLine();
+        while (true)
+        {
+            Console.WriteLine("Please enter folder directory");
+        
+            string? directory = Console.ReadLine();
 
-        if (string.IsNullOrWhiteSpace(directory))
-        {
-            Console.WriteLine("No directory entered!");
-            return;
+            if (string.IsNullOrWhiteSpace(directory))
+            {
+                Console.WriteLine("No directory entered!");
+                continue;
+            }
+        
+            if (!Directory.Exists(directory))
+            {
+                Console.WriteLine(directory + " does not exists");
+                continue;
+            }
+        
+            DirectoryInfo directoryInfo = new(directory);
+            long directorySize = await GetDirectorySizeAsync(directoryInfo);
+            Console.WriteLine($"Size of {directory} is {Utils.GetSizeText(directorySize)}");
+        
+            List<FileObject> fileObjects = await GetFileObjectsAsync(directory);
+            DisplayFileObjects(fileObjects);
         }
-        
-        if (!Directory.Exists(directory))
-        {
-            Console.WriteLine(directory + " does not exists");
-            return;
-        }
-        
-        DirectoryInfo directoryInfo = new(directory);
-        long directorySize = await GetDirectorySizeAsync(directoryInfo);
-        Console.WriteLine($"Size of {directory} is {Utils.GetSizeText(directorySize)}");
-        
-        List<FileObject> fileObjects = await GetFileObjectsAsync(directory);
-        DisplayFileObjects(fileObjects);
     }
     
     private static async Task<long> GetDirectorySizeAsync(DirectoryInfo directoryInfo)
