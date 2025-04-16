@@ -1,15 +1,8 @@
 ﻿using Disc_Viewer.src.scripts;
 
-string colorYellow = "\x1b[33m";
-string colorBlue = "\u001b[1;34m";
-string colorCyan = "\x1b[36m";
-string colorWhite = "\x1b[37m";
-string colorRed = "\x1b[31m";
-string colorReset = "\u001b[0m";
+Console.WriteLine("Welcome to Disc Viewer!\nPlease enter folder directory");
 
-Console.WriteLine(Pastel.ConsoleExtensions.Pastel("Welcome to Disc Viewer!\nPlease enter folder directory", ConsoleColor.Cyan));
-
-string directory = Console.ReadLine();
+string directory = Console.ReadLine()!;
 
 if (!Directory.Exists(directory))
 {
@@ -38,7 +31,7 @@ foreach (string file in files)
     }
     catch
     {
-        Console.WriteLine(colorRed + "Error -> " + file + colorReset);
+        Console.WriteLine(ConsoleColors.Red + "Error -> " + file + ConsoleColors.Reset);
         continue;
     }
 }
@@ -55,7 +48,7 @@ foreach (string folder in folders)
     }
     catch
     {
-        Console.WriteLine(colorRed + "Error -> " + folder + colorReset);
+        Console.WriteLine(ConsoleColors.Red + "Error -> " + folder + ConsoleColors.Reset);
         continue;
     }
 }
@@ -64,7 +57,7 @@ fileObjects.Sort((x, y) => y.SizeInBytes.CompareTo(x.SizeInBytes));
 
 for (int i = 0; i < fileObjects.Count; i++)
 {
-    string filePath = $"{colorBlue}{fileObjects[i].Directory[..^fileObjects[i].Name.Length]}{colorReset}{colorCyan}{fileObjects[i].Name}";
+    string filePath = $"{ConsoleColors.Blue}{fileObjects[i].Directory[..^fileObjects[i].Name.Length]}{ConsoleColors.Reset}{ConsoleColors.Cyan}{fileObjects[i].Name}";
 
-    Console.WriteLine($"{filePath}{colorWhite} - {colorYellow}{fileObjects[i].Size}{colorWhite}");
+    Console.WriteLine($"{filePath}{ConsoleColors.White} - {ConsoleColors.Yellow}{fileObjects[i].Size}{ConsoleColors.White}");
 }

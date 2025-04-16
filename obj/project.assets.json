@@ -1,48 +1,11 @@
 {
   "version": 3,
   "targets": {
-    "net6.0": {
-      "Pastel/4.1.0": {
-        "type": "package",
-        "compile": {
-          "lib/net6.0/Pastel.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net6.0/Pastel.dll": {
-            "related": ".xml"
-          }
-        }
-      }
-    }
+    "net6.0": {}
   },
-  "libraries": {
-    "Pastel/4.1.0": {
-      "sha512": "2RGTLbvDyhUyZmNIAdyJZkQTr8RJwD/l4vEvFujLRZN2uxJal1AR8STe7rJwrYESO/Waaa20eYhVd4Q3KX+Nxw==",
-      "type": "package",
-      "path": "pastel/4.1.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "LICENSE",
-        "README.md",
-        "icon.png",
-        "lib/net462/Pastel.dll",
-        "lib/net462/Pastel.xml",
-        "lib/net6.0/Pastel.dll",
-        "lib/net6.0/Pastel.xml",
-        "lib/net7.0/Pastel.dll",
-        "lib/net7.0/Pastel.xml",
-        "pastel.4.1.0.nupkg.sha512",
-        "pastel.nuspec"
-      ]
-    }
-  },
+  "libraries": {},
   "projectFileDependencyGroups": {
-    "net6.0": [
-      "Pastel >= 4.1.0"
-    ]
+    "net6.0": []
   },
   "packageFolders": {
     "C:\\Users\\USER\\.nuget\\packages\\": {}
@@ -65,6 +28,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "E:\\Projekty\\Polygons Engine\\Polygons Engine\\bin\\Release": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -77,24 +41,24 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
       "net6.0": {
         "targetAlias": "net6.0",
-        "dependencies": {
-          "Pastel": {
-            "target": "Package",
-            "version": "[4.1.0, )"
-          }
-        },
         "imports": [
           "net461",
           "net462",
           "net47",
           "net471",
           "net472",
-          "net48"
+          "net48",
+          "net481"
         ],
         "assetTargetFallback": true,
         "warn": true,
@@ -103,7 +67,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.201\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.404\\RuntimeIdentifierGraph.json"
       }
     }
   }
