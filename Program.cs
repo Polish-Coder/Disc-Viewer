@@ -1,63 +1,97 @@
-﻿using Disc_Viewer.src.scripts;
+﻿using System.Collections;
+using Disc_Viewer.src.scripts;
 
-Console.WriteLine("Welcome to Disc Viewer!\nPlease enter folder directory");
-
-string directory = Console.ReadLine()!;
-
-if (!Directory.Exists(directory))
+public class Program
 {
-    Console.WriteLine(directory + " does not exists");
-    return;
-}
-
-DirectoryInfo directoryInfo = new(directory);
-long directorySize = await Task.Run(() => directoryInfo.EnumerateFiles("*", new EnumerationOptions {IgnoreInaccessible = true, RecurseSubdirectories = true}).Sum(file => file.Length));
-Console.WriteLine($"Size of {directory} is {Utils.GetSizeText(directorySize)}");
-
-string[] files = Directory.GetFiles(directory);
-string[] folders = Directory.GetDirectories(directory);
-
-List<FileObject> fileObjects = new();
-
-foreach (string file in files)
-{
-    FileInfo info = new(file);
-
-    try
+    public static async Task Main()
     {
-        float sizeInBytes = info.Length;
+        Console.WriteLine("Welcome to Disc Viewer!\nPlease enter folder directory");
+        
+        string? directory = Console.ReadLine();
 
-        fileObjects.Add(new FileObject(info, info.Name, file, sizeInBytes, Utils.GetSizeText(sizeInBytes)));
+        if (string.IsNullOrWhiteSpace(directory))
+        {
+            Console.WriteLine("No directory entered!");
+            return;
+        }
+        
+        if (!Directory.Exists(directory))
+        {
+            Console.WriteLine(directory + " does not exists");
+            return;
+        }
+        
+        DirectoryInfo directoryInfo = new(directory);
+        long directorySize = await GetDirectorySizeAsync(directoryInfo);
+        Console.WriteLine($"Size of {directory} is {Utils.GetSizeText(directorySize)}");
+        
+        List<FileObject> fileObjects = await GetFileObjectsAsync(directory);
+        DisplayFileObjects(fileObjects);
     }
-    catch
+    
+    private static async Task<long> GetDirectorySizeAsync(DirectoryInfo directoryInfo)
     {
-        Console.WriteLine(ConsoleColors.Red + "Error -> " + file + ConsoleColors.Reset);
-        continue;
+        return await Task.Run(() =>
+            directoryInfo.EnumerateFiles("*", new EnumerationOptions
+            {
+                IgnoreInaccessible = true,
+                RecurseSubdirectories = true
+            }).Sum(file => file.Length));
     }
-}
-
-foreach (string folder in folders)
-{
-    DirectoryInfo info = new(folder);
-
-    try
+    
+    private static async Task<List<FileObject>> GetFileObjectsAsync(string directoryPath)
     {
-        long sizeInBytes = await Task.Run(() => info.EnumerateFiles("*", SearchOption.AllDirectories).Sum(file => file.Length));
+        List<FileObject> fileObjects = new List<FileObject>();
 
-        fileObjects.Add(new FileObject(info, info.Name, folder, sizeInBytes, Utils.GetSizeText(sizeInBytes)));
+        string[] files = Directory.GetFiles(directoryPath);
+        string[] folders = Directory.GetDirectories(directoryPath);
+
+        foreach (string file in files)
+        {
+            try
+            {
+                FileInfo fileInfo = new FileInfo(file);
+                long size = fileInfo.Length;
+
+                fileObjects.Add(new FileObject(fileInfo, fileInfo.Name, file, size, Utils.GetSizeText(size)));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{ConsoleColors.Red}Error -> {file}\n{ex.Message}{ConsoleColors.Reset}");
+            }
+        }
+
+        IEnumerable<Task<FileObject?>> folderTasks = folders.Select(async folder =>
+        {
+            try
+            {
+                DirectoryInfo directoryInfo = new DirectoryInfo(folder);
+                long size = await GetDirectorySizeAsync(directoryInfo);
+
+                return new FileObject(directoryInfo, directoryInfo.Name, folder, size, Utils.GetSizeText(size));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{ConsoleColors.Red}Error -> {folder}\n{ex.Message}{ConsoleColors.Reset}");
+                return null;
+            }
+        });
+
+        FileObject?[] folderResults = await Task.WhenAll(folderTasks);
+        fileObjects.AddRange(folderResults.Where(f => f != null)!);
+
+        fileObjects.Sort((x, y) => y!.SizeInBytes.CompareTo(x!.SizeInBytes));
+        return fileObjects!;
     }
-    catch
+    
+    private static void DisplayFileObjects(List<FileObject> fileObjects)
     {
-        Console.WriteLine(ConsoleColors.Red + "Error -> " + folder + ConsoleColors.Reset);
-        continue;
+        foreach (FileObject fileObj in fileObjects)
+        {
+            string directoryName = Path.GetDirectoryName(fileObj.Directory) ?? "";
+            string filePath = $"{ConsoleColors.Blue}{directoryName}{Path.DirectorySeparatorChar}{ConsoleColors.Reset}{ConsoleColors.Cyan}{fileObj.Name}";
+
+            Console.WriteLine($"{filePath}{ConsoleColors.White} - {ConsoleColors.Yellow}{fileObj.Size}{ConsoleColors.White}");
+        }
     }
-}
-
-fileObjects.Sort((x, y) => y.SizeInBytes.CompareTo(x.SizeInBytes));
-
-for (int i = 0; i < fileObjects.Count; i++)
-{
-    string filePath = $"{ConsoleColors.Blue}{fileObjects[i].Directory[..^fileObjects[i].Name.Length]}{ConsoleColors.Reset}{ConsoleColors.Cyan}{fileObjects[i].Name}";
-
-    Console.WriteLine($"{filePath}{ConsoleColors.White} - {ConsoleColors.Yellow}{fileObjects[i].Size}{ConsoleColors.White}");
 }
