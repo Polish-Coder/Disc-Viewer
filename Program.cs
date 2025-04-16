@@ -14,13 +14,13 @@ public class Program
 
             if (string.IsNullOrWhiteSpace(directory))
             {
-                Console.WriteLine("No directory entered!");
+                Console.WriteLine($"{ConsoleColors.Red}No directory entered!{ConsoleColors.Reset}");
                 continue;
             }
         
             if (!Directory.Exists(directory))
             {
-                Console.WriteLine(directory + " does not exists");
+                Console.WriteLine($"{ConsoleColors.Red}{directory} does not exists{ConsoleColors.Reset}");
                 continue;
             }
         
