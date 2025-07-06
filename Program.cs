@@ -45,7 +45,7 @@
                 FileInfo fileInfo = new FileInfo(file);
                 long size = Utils.GetSize(file);
                 
-                FileObject fileObject = new FileObject(fileInfo, fileInfo.Name, file, size, Utils.GetSizeText(size));
+                FileObject fileObject = new FileObject(fileInfo.Name, file, size);
 
                 lock (fileLock)
                 {
@@ -66,7 +66,7 @@
                 DirectoryInfo directoryInfo = new DirectoryInfo(folder);
                 long size = await GetDirectorySizeAsync(directoryInfo);
                 
-                var folderObject = new FileObject(directoryInfo, directoryInfo.Name, folder, size, Utils.GetSizeText(size));
+                var folderObject = new FileObject(directoryInfo.Name, folder, size);
 
                 lock (fileLock)
                 {
@@ -102,8 +102,9 @@
         {
             string directoryName = Path.GetDirectoryName(fileObj.Directory) ?? "";
             string filePath = $"{ConsoleColors.Blue}{directoryName}{Path.DirectorySeparatorChar}{ConsoleColors.Reset}{ConsoleColors.Cyan}{fileObj.Name}";
+            string fileSize = Utils.GetSizeText(fileObj.SizeInBytes);
 
-            Console.WriteLine($"{filePath}{ConsoleColors.White} - {ConsoleColors.Yellow}{fileObj.Size}{ConsoleColors.White}");
+            Console.WriteLine($"{filePath}{ConsoleColors.White} - {ConsoleColors.Yellow}{fileSize}{ConsoleColors.Reset}");
         }
     }
 }
