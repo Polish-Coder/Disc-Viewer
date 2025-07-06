@@ -10,7 +10,7 @@
     <DebugSymbols>false</DebugSymbols>
     
     <Product>Disc Viewer</Product>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
     <Authors>Polish Coder</Authors>
     <Description>Tool for analyzing folder sizes</Description>
   </PropertyGroup>
