@@ -3,12 +3,16 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
-    <PublishSingleFile>true</PublishSingleFile>
-    <SelfContained>true</SelfContained>
-    <PublishTrimmed>true</PublishTrimmed>
-    <RootNamespace>Disc_Viewer</RootNamespace>
+    <RootNamespace>DiscViewer</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    
+    <Product>Disc Viewer</Product>
+    <Version>1.1.0</Version>
+    <Authors>Polish Coder</Authors>
+    <Description>Tool for analyzing folder sizes</Description>
   </PropertyGroup>
 
 </Project>
