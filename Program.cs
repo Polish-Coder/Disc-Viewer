@@ -2,6 +2,8 @@
 {
     public static async Task Main()
     {
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
+        
         Console.WriteLine("Welcome to Disc Viewer!");
         
         while (true)
@@ -45,7 +47,7 @@
                 FileInfo fileInfo = new FileInfo(file);
                 long size = Utils.GetSize(file);
                 
-                FileObject fileObject = new FileObject(fileInfo.Name, file, size);
+                FileObject fileObject = new FileObject(fileInfo.Name, false, file, size);
 
                 lock (fileLock)
                 {
@@ -66,7 +68,7 @@
                 DirectoryInfo directoryInfo = new DirectoryInfo(folder);
                 long size = await GetDirectorySizeAsync(directoryInfo);
                 
-                var folderObject = new FileObject(directoryInfo.Name, folder, size);
+                FileObject folderObject = new FileObject(directoryInfo.Name, true, folder, size);
 
                 lock (fileLock)
                 {
@@ -100,11 +102,12 @@
     {
         foreach (FileObject fileObj in fileObjects)
         {
+            string icon = fileObj.IsDirectory ? "\ud83d\udcc1" : "\ud83d\udcc4";
             string directoryName = Path.GetDirectoryName(fileObj.Directory) ?? "";
-            string filePath = $"{ConsoleColors.Blue}{directoryName}{Path.DirectorySeparatorChar}{ConsoleColors.Reset}{ConsoleColors.Cyan}{fileObj.Name}";
+            string filePath = $"{ConsoleColors.Blue}{directoryName}{Path.DirectorySeparatorChar}{ConsoleColors.Cyan}{fileObj.Name}";
             string fileSize = Utils.GetSizeText(fileObj.SizeInBytes);
 
-            Console.WriteLine($"{filePath}{ConsoleColors.White} - {ConsoleColors.Yellow}{fileSize}{ConsoleColors.Reset}");
+            Console.WriteLine($"{icon} {filePath}{ConsoleColors.White} - {ConsoleColors.Yellow}{fileSize}{ConsoleColors.Reset}");
         }
     }
 }
