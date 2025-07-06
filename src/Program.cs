@@ -32,10 +32,7 @@ public class Program
             
             Console.WriteLine($"Size of {directory} is {Utils.GetSizeText(directorySize)}");
             DisplayFileObjects(fileObjects);
-            
-            TimeSpan elapsed = stopwatch.Elapsed;
-            string elapsedFormatted = $"{elapsed.Seconds:D2}:{elapsed.Milliseconds:D3}";
-            Console.WriteLine($"Time taken: {elapsedFormatted} (ss:ms)");
+            Console.WriteLine($"Time taken: {stopwatch.Elapsed.TotalSeconds:F3} seconds");
         }
         // ReSharper disable once FunctionNeverReturns
     }
