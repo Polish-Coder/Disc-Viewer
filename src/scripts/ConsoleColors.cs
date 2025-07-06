@@ -1,6 +1,4 @@
-﻿namespace Disc_Viewer.src.scripts;
-
-public static class ConsoleColors
+﻿public static class ConsoleColors
 {
     public const string Yellow = "\x1b[33m";
     public const string Blue = "\u001b[1;34m";
