@@ -111,19 +111,24 @@ public class Program
     
     private static void PrintDirectory(string directory, long directorySize, List<FileObject> fileObjects)
     {
-        int sizeIndent = fileObjects.Max(x => x.Name.Length) + 5;
+        int sizeIndent = Math.Max(fileObjects.Max(x => x.Name.Length), directory.Length) + 5;
 
-        string directoryName = $"{ConsoleColors.Blue}{directory.PadRight(sizeIndent)}";
+        string directoryName = $"{ConsoleColors.Blue}{directory}{ConsoleColors.Reset}";
         string directorySizeText = $"{ConsoleColors.Yellow}{Utils.GetSizeText(directorySize)}";
-        Console.WriteLine($"{ConsoleSymbols.Folder} {directoryName} {directorySizeText}{ConsoleColors.Reset}");
-        
-        foreach (FileObject fileObj in fileObjects)
-        {
-            string icon = fileObj.IsDirectory ? ConsoleSymbols.Folder : ConsoleSymbols.File;
-            string fileName = $"{ConsoleColors.Cyan}{fileObj.Name.PadRight(sizeIndent)}";
-            string fileSize = $"{ConsoleColors.Yellow}{Utils.GetSizeText(fileObj.SizeInBytes)}";
+        int lineLength = sizeIndent - directoryName.Length + 10;
+        string line = new string(ConsoleSymbols.Line[0], lineLength);
+        Console.WriteLine($"{ConsoleSymbols.Folder} {directoryName} {line} {directorySizeText}{ConsoleColors.Reset}");
 
-            Console.WriteLine($"{icon} {fileName} {fileSize}{ConsoleColors.Reset}");
+        for (int i = 0; i < fileObjects.Count; i++)
+        {
+            FileObject fileObject = fileObjects[i];
+            
+            string treeSymbol = i == fileObjects.Count - 1 ? ConsoleSymbols.TreeEnd : ConsoleSymbols.TreeBranch;
+            string icon = fileObject.IsDirectory ? ConsoleSymbols.Folder : ConsoleSymbols.File;
+            string fileName = $"{ConsoleColors.Cyan}{fileObject.Name.PadRight(sizeIndent - treeSymbol.Length - 1)}";
+            string fileSize = $"{ConsoleColors.Yellow}{Utils.GetSizeText(fileObject.SizeInBytes)}";
+
+            Console.WriteLine($"{treeSymbol} {icon} {fileName} {fileSize}{ConsoleColors.Reset}");
         }
     }
 }
