@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
+using System.Reflection;
 
 public class Program
 {
@@ -10,11 +11,12 @@ public class Program
         
         Console.OutputEncoding = System.Text.Encoding.UTF8;
         
-        Console.WriteLine("Welcome to Disc Viewer!");
+        Version? version = Assembly.GetExecutingAssembly().GetName().Version;
+        Console.WriteLine($"Disc Viewer v{version?.Major}.{version?.Minor}.{version?.Build}");
         
         while (true)
         {
-            Console.WriteLine("Please enter folder directory");
+            Console.WriteLine("Please enter a directory path...");
         
             string? directory = Console.ReadLine();
 
@@ -34,9 +36,9 @@ public class Program
             (long directorySize, List<FileObject> fileObjects) = await ScanDirectoryAsync(directory);
             stopwatch.Stop();
             
-            Console.WriteLine($"Size of {directory} is {Utils.GetSizeText(directorySize)}");
+            Console.WriteLine($"Size of {ConsoleColors.Blue}{directory}{ConsoleColors.Reset} is {ConsoleColors.Yellow}{Utils.GetSizeText(directorySize)}{ConsoleColors.Reset}");
             DisplayFileObjects(fileObjects);
-            Console.WriteLine($"Time taken: {stopwatch.Elapsed.TotalSeconds:F3} seconds");
+            Console.WriteLine($"Scan completed in: {stopwatch.Elapsed.TotalSeconds:F3} seconds\n");
         }
         // ReSharper disable once FunctionNeverReturns
     }
@@ -110,14 +112,15 @@ public class Program
     
     private static void DisplayFileObjects(List<FileObject> fileObjects)
     {
+        int maxNameLength = fileObjects.Max(x => x.Name.Length);
+        
         foreach (FileObject fileObj in fileObjects)
         {
             string icon = fileObj.IsDirectory ? "\ud83d\udcc1" : "\ud83d\udcc4";
-            string directoryName = Path.GetDirectoryName(fileObj.Directory) ?? "";
-            string filePath = $"{ConsoleColors.Blue}{directoryName}{Path.DirectorySeparatorChar}{ConsoleColors.Cyan}{fileObj.Name}";
+            string fileName = $"{ConsoleColors.Cyan}{fileObj.Name}{ConsoleColors.Reset}";
             string fileSize = Utils.GetSizeText(fileObj.SizeInBytes);
 
-            Console.WriteLine($"{icon} {filePath}{ConsoleColors.White} - {ConsoleColors.Yellow}{fileSize}{ConsoleColors.Reset}");
+            Console.WriteLine($"{icon} {fileName.PadRight(maxNameLength + 10)} {ConsoleColors.Yellow}{fileSize}{ConsoleColors.Reset}");
         }
     }
 }
