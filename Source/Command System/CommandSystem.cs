@@ -13,6 +13,7 @@ public static class CommandSystem
     {
         Register(new ScanCommand());
         Register(new HelpCommand());
+        Register(new ExitCommand());
     }
 
     public static Command? GetCommand(string name)
