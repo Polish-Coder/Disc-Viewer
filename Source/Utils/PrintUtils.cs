@@ -6,7 +6,7 @@
         const int percentageIndent = 10;
 
         string directoryName = $"{ConsoleColors.Blue}{directory}{ConsoleColors.Reset}";
-        string directorySizeText = $"{ConsoleColors.Yellow}{PrintUtils.GetSizeText(directorySize)}";
+        string directorySizeText = $"{ConsoleColors.Yellow}{GetSizeText(directorySize)}";
         int lineLength = sizeIndent - directoryName.Length + 10;
         string line = new string(ConsoleSymbols.Line[0], lineLength);
         Console.WriteLine($"{ConsoleSymbols.Folder} {directoryName} {line} {directorySizeText}{ConsoleColors.Reset}");
@@ -20,7 +20,7 @@
             string treeSymbol = i == fileObjects.Count - 1 ? ConsoleSymbols.TreeEnd : ConsoleSymbols.TreeBranch;
             string icon = fileObject.IsDirectory ? ConsoleSymbols.Folder : ConsoleSymbols.File;
             string fileName = $"{ConsoleColors.Cyan}{fileObject.Name.PadRight(sizeIndent - treeSymbol.Length - 1)}";
-            string fileSize = $"{ConsoleColors.Yellow}{PrintUtils.GetSizeText(fileObject.SizeInBytes),-percentageIndent}";
+            string fileSize = $"{ConsoleColors.Yellow}{GetSizeText(fileObject.SizeInBytes),-percentageIndent}";
             string filePercentage = $"[ {percentage:F1}% ]";
 
             Console.WriteLine($"{treeSymbol} {icon} {fileName} {fileSize}{ConsoleColors.Reset}{filePercentage}");
