@@ -112,6 +112,7 @@ public class Program
     private static void PrintDirectory(string directory, long directorySize, List<FileObject> fileObjects)
     {
         int sizeIndent = Math.Max(fileObjects.Max(x => x.Name.Length), directory.Length) + 5;
+        const int percentageIndent = 10;
 
         string directoryName = $"{ConsoleColors.Blue}{directory}{ConsoleColors.Reset}";
         string directorySizeText = $"{ConsoleColors.Yellow}{Utils.GetSizeText(directorySize)}";
@@ -122,13 +123,16 @@ public class Program
         for (int i = 0; i < fileObjects.Count; i++)
         {
             FileObject fileObject = fileObjects[i];
+
+            float percentage = fileObject.SizeInBytes / directorySize * 100;
             
             string treeSymbol = i == fileObjects.Count - 1 ? ConsoleSymbols.TreeEnd : ConsoleSymbols.TreeBranch;
             string icon = fileObject.IsDirectory ? ConsoleSymbols.Folder : ConsoleSymbols.File;
             string fileName = $"{ConsoleColors.Cyan}{fileObject.Name.PadRight(sizeIndent - treeSymbol.Length - 1)}";
-            string fileSize = $"{ConsoleColors.Yellow}{Utils.GetSizeText(fileObject.SizeInBytes)}";
+            string fileSize = $"{ConsoleColors.Yellow}{Utils.GetSizeText(fileObject.SizeInBytes),-percentageIndent}";
+            string filePercentage = $"[ {percentage:F1}% ]";
 
-            Console.WriteLine($"{treeSymbol} {icon} {fileName} {fileSize}{ConsoleColors.Reset}");
+            Console.WriteLine($"{treeSymbol} {icon} {fileName} {fileSize}{ConsoleColors.Reset}{filePercentage}");
         }
     }
 }
