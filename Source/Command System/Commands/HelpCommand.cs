@@ -4,7 +4,7 @@ public class HelpCommand : Command
 {
     public override string Name => "help";
     public override string Usage => "";
-    public override string Description => "Show this message";
+    public override string Description => "Shows available commands";
     
     public override Task Execute(string[] args)
     {

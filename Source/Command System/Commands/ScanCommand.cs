@@ -6,7 +6,7 @@ public class ScanCommand : Command
 {
     public override string Name => "scan";
     public override string Usage => "<path>";
-    public override string Description => "Scan a directory";
+    public override string Description => "Scans a directory and calculates the total size including subdirectories";
     
     public override async Task Execute(string[] args)
     {
