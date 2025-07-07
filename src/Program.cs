@@ -36,8 +36,7 @@ public class Program
             (long directorySize, List<FileObject> fileObjects) = await ScanDirectoryAsync(directory);
             stopwatch.Stop();
             
-            Console.WriteLine($"Size of {ConsoleColors.Blue}{directory}{ConsoleColors.Reset} is {ConsoleColors.Yellow}{Utils.GetSizeText(directorySize)}{ConsoleColors.Reset}");
-            DisplayFileObjects(fileObjects);
+            PrintDirectory(directory, directorySize, fileObjects);
             Console.WriteLine($"Scan completed in: {stopwatch.Elapsed.TotalSeconds:F3} seconds\n");
         }
         // ReSharper disable once FunctionNeverReturns
@@ -110,17 +109,21 @@ public class Program
             }).Sum(file => Utils.GetSize(file.FullName)));
     }
     
-    private static void DisplayFileObjects(List<FileObject> fileObjects)
+    private static void PrintDirectory(string directory, long directorySize, List<FileObject> fileObjects)
     {
-        int maxNameLength = fileObjects.Max(x => x.Name.Length);
+        int sizeIndent = fileObjects.Max(x => x.Name.Length) + 5;
+
+        string directoryName = $"{ConsoleColors.Blue}{directory.PadRight(sizeIndent)}";
+        string directorySizeText = $"{ConsoleColors.Yellow}{Utils.GetSizeText(directorySize)}";
+        Console.WriteLine($"{ConsoleSymbols.Folder} {directoryName} {directorySizeText}{ConsoleColors.Reset}");
         
         foreach (FileObject fileObj in fileObjects)
         {
-            string icon = fileObj.IsDirectory ? "\ud83d\udcc1" : "\ud83d\udcc4";
-            string fileName = $"{ConsoleColors.Cyan}{fileObj.Name}{ConsoleColors.Reset}";
-            string fileSize = Utils.GetSizeText(fileObj.SizeInBytes);
+            string icon = fileObj.IsDirectory ? ConsoleSymbols.Folder : ConsoleSymbols.File;
+            string fileName = $"{ConsoleColors.Cyan}{fileObj.Name.PadRight(sizeIndent)}";
+            string fileSize = $"{ConsoleColors.Yellow}{Utils.GetSizeText(fileObj.SizeInBytes)}";
 
-            Console.WriteLine($"{icon} {fileName.PadRight(maxNameLength + 10)} {ConsoleColors.Yellow}{fileSize}{ConsoleColors.Reset}");
+            Console.WriteLine($"{icon} {fileName} {fileSize}{ConsoleColors.Reset}");
         }
     }
 }
