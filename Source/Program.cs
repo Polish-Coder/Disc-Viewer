@@ -2,8 +2,10 @@
 using System.Reflection;
 using DiscViewer.Commands;
 
-public class Program
+public static class Program
 {
+    public static string? CurrentDirectory { get; set; }
+    
     public static async Task Main()
     {
         CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
