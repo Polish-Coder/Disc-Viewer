@@ -22,7 +22,7 @@ public class GotoCommand : Command
             return;
         }
         
-        string subfolderName = args[0];
+        string subfolderName = string.Join(' ', args);
         string path = Path.Combine(Program.CurrentDirectory, subfolderName);
         
         if (!Directory.Exists(path))

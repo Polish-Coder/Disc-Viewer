@@ -16,7 +16,7 @@ public class ScanCommand : Command
             return;
         }
         
-        string path = args[0];
+        string path = string.Join(' ', args);
         
         if (!Directory.Exists(path))
         {
