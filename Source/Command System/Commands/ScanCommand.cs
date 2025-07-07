@@ -5,14 +5,14 @@ namespace DiscViewer.Commands;
 public class ScanCommand : Command
 {
     public override string Name => "scan";
-    public override string Usage => "scan <path>";
+    public override string Usage => "<path>";
     public override string Description => "Scan a directory";
     
     public override async Task Execute(string[] args)
     {
         if (args.Length == 0)
         {
-            Console.WriteLine($"{ConsoleColors.Red}No path given. Correct usage: '{Usage}'.{ConsoleColors.Reset}");
+            Console.WriteLine($"{ConsoleColors.Red}No path given. Correct usage: '{Name} {Usage}'.{ConsoleColors.Reset}");
             return;
         }
         

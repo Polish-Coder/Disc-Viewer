@@ -12,6 +12,7 @@ public static class CommandSystem
     public static void Setup()
     {
         Register(new ScanCommand());
+        Register(new HelpCommand());
     }
 
     public static Command? GetCommand(string name)
