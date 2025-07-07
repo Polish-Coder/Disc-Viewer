@@ -1,9 +1,13 @@
 ﻿using System.Diagnostics;
+using System.Globalization;
 
 public class Program
 {
     public static async Task Main()
     {
+        CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+        CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
+        
         Console.OutputEncoding = System.Text.Encoding.UTF8;
         
         Console.WriteLine("Welcome to Disc Viewer!");

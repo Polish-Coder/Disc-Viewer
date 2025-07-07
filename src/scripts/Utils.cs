@@ -25,22 +25,26 @@ public static class Utils
     
     public static string GetSizeText(float sizeInBytes)
     {
-        string size = Math.Floor(sizeInBytes) + " B";
+        string size;
 
-        if (sizeInBytes > 1024 * 1024 * 1024)
+        if (sizeInBytes >= 1024 * 1024 * 1024)
         {
             float newSize = sizeInBytes / (1024 * 1024 * 1024);
-            size = Math.Floor(newSize) + " GB";
+            size = $"{newSize:F1} GB";
         }
-        else if (sizeInBytes > 1024 * 1024)
+        else if (sizeInBytes >= 1024 * 1024)
         {
             float newSize = sizeInBytes / (1024 * 1024);
-            size = Math.Floor(newSize) + " MB";
+            size = $"{newSize:F1} MB";
         }
-        else if (sizeInBytes > 1024)
+        else if (sizeInBytes >= 1024)
         {
             float newSize = sizeInBytes / 1024;
-            size = Math.Floor(newSize) + " KB";
+            size = $"{newSize:F0} KB";
+        }
+        else
+        {
+            size = $"{sizeInBytes:F0} B";
         }
 
         return size;
