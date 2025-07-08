@@ -16,8 +16,11 @@ public class HelpCommand : Command
         
         foreach (Command command in commands)
         {
-            string usage = $"{ConsoleColors.Gray}{command.Usage}";
-            Console.WriteLine($"  {command.Name} {usage.PadRight(indentLevel)}{ConsoleColors.Reset}{command.Description}");
+            string padded = $"{command.Name} {command.Usage}".PadRight(indentLevel);
+            string formatted = command.Usage.Length > 0
+                ? padded.Replace(command.Usage, $"{ConsoleColors.Gray}{command.Usage}{ConsoleColors.Reset}")
+                : padded;
+            Console.WriteLine($"  {formatted}{command.Description}");
         }
         
         return Task.CompletedTask;
