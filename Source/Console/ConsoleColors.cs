@@ -5,6 +5,7 @@
     public const string Cyan = "\x1b[36m";
     public const string White = "\x1b[37m";
     public const string Red = "\x1b[31m";
+    public const string Green = "\u001b[32m";
     public const string Gray = "\u001b[90m";
     public const string Reset = "\u001b[0m";
 }
