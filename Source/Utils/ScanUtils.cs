@@ -8,7 +8,13 @@ public static class ScanUtils
         (long directorySize, List<FileObject> fileObjects) = await ScanDirectoryAsync(path);
         stopwatch.Stop();
             
-        PrintUtils.PrintDirectory(path, directorySize, fileObjects);
+        PrintUtils.PrintDirectory(path, directorySize, fileObjects, out int skippedCount);
+        
+        if (skippedCount > 0)
+        {
+            Console.WriteLine($"Skipped {ConsoleColors.Yellow}{skippedCount}{ConsoleColors.Reset} items based on current settings.");
+        }
+        
         Console.WriteLine($"Scan completed in: {stopwatch.Elapsed.TotalSeconds:F3} seconds.\n");
         
         Program.CurrentDirectory = path;

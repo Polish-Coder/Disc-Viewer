@@ -1,23 +1,42 @@
 ﻿public static class PrintUtils
 {
-    public static void PrintDirectory(string directory, long directorySize, List<FileObject> fileObjects)
+    public static void PrintDirectory(string directory, long directorySize, List<FileObject> fileObjects, out int skippedCount)
     {
-        int sizeIndent = Math.Max(fileObjects.Max(x => x.Name.Length), directory.Length) + 5;
+        int baseCount = fileObjects.Count;
+        
+        FileObject[] displayedFiles = fileObjects.Where(x => x.SizeInBytes >= Options.MinSize).ToArray();
+        int itemsCount = displayedFiles.Length;
+        skippedCount = baseCount - itemsCount;
+
+        int sizeIndent = itemsCount != 0 ? Math.Max(displayedFiles.Max(x => x.Name.Length), directory.Length) + 5 : 0;
         const int percentageIndent = 10;
 
         string directoryName = $"{ConsoleColors.Blue}{directory}{ConsoleColors.Reset}";
         string directorySizeText = $"{ConsoleColors.Yellow}{GetSizeText(directorySize)}";
-        int lineLength = sizeIndent - directoryName.Length + 10;
+        int lineLength = itemsCount != 0 ? sizeIndent - directoryName.Length + 10 : 5;
         string line = new string(ConsoleSymbols.Line[0], lineLength);
         Console.WriteLine($"{ConsoleSymbols.Folder} {directoryName} {line} {directorySizeText}{ConsoleColors.Reset}");
 
-        for (int i = 0; i < fileObjects.Count; i++)
+        if (baseCount == 0)
         {
-            FileObject fileObject = fileObjects[i];
+            Console.WriteLine($"{ConsoleColors.Yellow}This directory is empty...{ConsoleColors.Reset}");
+            skippedCount = 0;
+            return;
+        }
+        
+        if (itemsCount == 0)
+        {
+            Console.WriteLine($"{ConsoleColors.Yellow}Nothing to display - all item were excluded based on the current options.{ConsoleColors.Reset}");
+            return;
+        }
+        
+        for (int i = 0; i < itemsCount; i++)
+        {
+            FileObject fileObject = displayedFiles[i];
 
             float percentage = fileObject.SizeInBytes / directorySize * 100;
             
-            string treeSymbol = i == fileObjects.Count - 1 ? ConsoleSymbols.TreeEnd : ConsoleSymbols.TreeBranch;
+            string treeSymbol = i == itemsCount - 1 ? ConsoleSymbols.TreeEnd : ConsoleSymbols.TreeBranch;
             string icon = fileObject.IsDirectory ? ConsoleSymbols.Folder : ConsoleSymbols.File;
             string fileName = $"{ConsoleColors.Cyan}{fileObject.Name.PadRight(sizeIndent - treeSymbol.Length - 1)}";
             string fileSize = $"{ConsoleColors.Yellow}{GetSizeText(fileObject.SizeInBytes),-percentageIndent}";
