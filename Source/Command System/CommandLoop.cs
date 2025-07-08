@@ -23,7 +23,7 @@ public static class CommandLoop
 
             if (command == null)
             {
-                Console.WriteLine($"{ConsoleColors.Red}Unknown command: '{commandName}'. Type 'help' fo available commands.{ConsoleColors.Reset}");
+                Console.WriteLine($"{ConsoleColors.Red}Unknown command: '{commandName}'. Type 'help' for available commands.{ConsoleColors.Reset}");
                 continue;
             }
 
