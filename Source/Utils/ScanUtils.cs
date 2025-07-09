@@ -78,7 +78,7 @@ public static class ScanUtils
                 if (remainingDepth > 0)
                 {
                     (long _, List<FileObject> children) = await ScanDirectoryInternalAsync(folder, (byte)(remainingDepth - 1));
-                    children.Sort((x, y) => y.SizeInBytes.CompareTo(x.SizeInBytes));
+                    SortItems(children);
                     folderObject.Children.AddRange(children);
                 }
                 
@@ -96,7 +96,7 @@ public static class ScanUtils
         
         await Task.WhenAll(folderTasks);
         
-        fileObjects.Sort((x, y) => y.SizeInBytes.CompareTo(x.SizeInBytes));
+        SortItems(fileObjects);
         return (totalSize, fileObjects);
     }
     
@@ -108,5 +108,19 @@ public static class ScanUtils
                 IgnoreInaccessible = true,
                 RecurseSubdirectories = true
             }).Sum(file => FileUtils.GetSize(file.FullName)));
+    }
+
+    private static void SortItems(List<FileObject> items)
+    {
+        items.Sort((x, y) =>
+        {
+            int result = y.SizeInBytes.CompareTo(x.SizeInBytes);
+            if (result != 0) return result;
+
+            result = y.IsAccessible.CompareTo(x.IsAccessible);
+            if (result != 0) return result;
+            
+            return string.Compare(x.Name, y.Name, StringComparison.Ordinal);
+        });
     }
 }
