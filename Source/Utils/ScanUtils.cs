@@ -39,9 +39,8 @@ public static class ScanUtils
             files = Directory.GetFiles(directoryPath);
             folders = Directory.GetDirectories(directoryPath);
         }
-        catch (Exception ex)
+        catch
         {
-            Console.WriteLine($"{ConsoleColors.Red}Access Error -> '{directoryPath}'\n{ex.Message}{ConsoleColors.Reset}");
             return (0, fileObjects);
         }
 
@@ -72,8 +71,9 @@ public static class ScanUtils
             {
                 DirectoryInfo directoryInfo = new DirectoryInfo(folder);
                 long size = await GetDirectorySizeAsync(directoryInfo);
+                bool isAccessible = FileUtils.IsDirectoryAccessible(folder);
                 
-                FileObject folderObject = new FileObject(directoryInfo.Name, true, folder, size);
+                FileObject folderObject = new FileObject(directoryInfo.Name, true, folder, size, isAccessible);
 
                 if (remainingDepth > 0)
                 {

@@ -57,7 +57,9 @@ public static class PrintUtils
         }
         
         string treeSymbol = pipes + (isLast ? ConsoleSymbols.TreeEnd : ConsoleSymbols.TreeBranch);
-        string icon = item.IsDirectory ? ConsoleSymbols.Folder : ConsoleSymbols.File;
+        string icon = item.IsAccessible
+            ? item.IsDirectory ? ConsoleSymbols.Folder : ConsoleSymbols.File
+            : ConsoleSymbols.Locked;
         string fileName = $"{ConsoleColors.Cyan}{item.Name.PadRight(sizeIndent - treeSymbol.Length - 1)}";
         string fileSize = $"{ConsoleColors.Yellow}{GetSizeText(item.SizeInBytes),-percentageIndent}";
         string filePercentage = $"[ {percentage:F1}% ]";
