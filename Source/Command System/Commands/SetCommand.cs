@@ -21,11 +21,10 @@ public class SetCommand : Command
         switch (option)
         {
             case "minsize":
-                if (ParseUtils.TryParseSize(value, out long result))
-                {
-                    Options.MinSize = result;
-                    Console.WriteLine($"{ConsoleColors.Green}Successfully set 'minsize' value to '{value}'.{ConsoleColors.Reset}");
-                }
+                OptionsManager.SetMinSize(value);
+                break;
+            case "depth":
+                OptionsManager.SetDepth(value);
                 break;
             default:
                 Console.WriteLine($"{ConsoleColors.Red}Unknown option: '{option}'. Type '{Name}' for available options.{ConsoleColors.Reset}");
