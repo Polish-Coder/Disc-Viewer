@@ -78,6 +78,7 @@ public static class ScanUtils
                 if (remainingDepth > 0)
                 {
                     (long _, List<FileObject> children) = await ScanDirectoryInternalAsync(folder, (byte)(remainingDepth - 1));
+                    children.Sort((x, y) => y.SizeInBytes.CompareTo(x.SizeInBytes));
                     folderObject.Children.AddRange(children);
                 }
                 
