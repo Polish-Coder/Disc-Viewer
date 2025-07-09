@@ -4,6 +4,7 @@
     public readonly bool IsDirectory;
     public readonly string Directory;
     public readonly float SizeInBytes;
+    public readonly List<FileObject> Children;
 
     public FileObject(string name, bool isDirectory, string directory, float sizeInBytes)
     {
@@ -11,5 +12,6 @@
         IsDirectory = isDirectory;
         Directory = directory;
         SizeInBytes = sizeInBytes;
+        Children = new List<FileObject>();
     }
 }

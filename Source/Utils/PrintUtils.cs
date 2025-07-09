@@ -1,4 +1,6 @@
-﻿public static class PrintUtils
+﻿using System.Text;
+
+public static class PrintUtils
 {
     public static void PrintDirectory(string directory, long directorySize, List<FileObject> fileObjects, out int skippedCount)
     {
@@ -9,7 +11,6 @@
         skippedCount = baseCount - itemsCount;
 
         int sizeIndent = itemsCount != 0 ? Math.Max(displayedFiles.Max(x => x.Name.Length), directory.Length) + 5 : 0;
-        const int percentageIndent = 10;
 
         string directoryName = $"{ConsoleColors.Blue}{directory}{ConsoleColors.Reset}";
         string directorySizeText = $"{ConsoleColors.Yellow}{GetSizeText(directorySize)}";
@@ -33,16 +34,49 @@
         for (int i = 0; i < itemsCount; i++)
         {
             FileObject fileObject = displayedFiles[i];
-
-            float percentage = fileObject.SizeInBytes / directorySize * 100;
+            bool isLast = i == itemsCount - 1;
             
-            string treeSymbol = i == itemsCount - 1 ? ConsoleSymbols.TreeEnd : ConsoleSymbols.TreeBranch;
-            string icon = fileObject.IsDirectory ? ConsoleSymbols.Folder : ConsoleSymbols.File;
-            string fileName = $"{ConsoleColors.Cyan}{fileObject.Name.PadRight(sizeIndent - treeSymbol.Length - 1)}";
-            string fileSize = $"{ConsoleColors.Yellow}{GetSizeText(fileObject.SizeInBytes),-percentageIndent}";
-            string filePercentage = $"[ {percentage:F1}% ]";
+            PrintItem(fileObject, directorySize, sizeIndent, 0, isLast, new List<bool>(), ref skippedCount);
+        }
+    }
 
-            Console.WriteLine($"{treeSymbol} {icon} {fileName} {fileSize}{ConsoleColors.Reset}{filePercentage}");
+    private static void PrintItem(FileObject item, long directorySize, int sizeIndent, byte level, bool isLast, List<bool> parentLastList, ref int skippedCount)
+    {
+        const int percentageIndent = 10;
+        const string pipe = ConsoleSymbols.TreePipe + "   ";
+        const string empty = "    ";
+        
+        float percentage = item.SizeInBytes / directorySize * 100;
+
+        StringBuilder pipes = new StringBuilder();
+
+        foreach (bool isParentLast in parentLastList)
+        {
+            pipes.Append(isParentLast ? empty : pipe);
+        }
+        
+        string treeSymbol = pipes + (isLast ? ConsoleSymbols.TreeEnd : ConsoleSymbols.TreeBranch);
+        string icon = item.IsDirectory ? ConsoleSymbols.Folder : ConsoleSymbols.File;
+        string fileName = $"{ConsoleColors.Cyan}{item.Name.PadRight(sizeIndent - treeSymbol.Length - 1)}";
+        string fileSize = $"{ConsoleColors.Yellow}{GetSizeText(item.SizeInBytes),-percentageIndent}";
+        string filePercentage = $"[ {percentage:F1}% ]";
+        
+        Console.WriteLine($"{treeSymbol} {icon} {fileName} {fileSize}{ConsoleColors.Reset}{filePercentage}");
+
+        List<FileObject> children = item.Children.Where(x => x.SizeInBytes >= Options.MinSize).ToList();
+        int childCount = children.Count;
+        
+        skippedCount += item.Children.Count - childCount;
+        
+        for (int i = 0; i < childCount; i++)
+        {
+            FileObject child = children[i];
+            byte childLevel = (byte)(level + 1);
+            bool isChildLast = i == childCount - 1;
+            
+            List<bool> newParentLastList = new List<bool>(parentLastList) { isLast };
+            
+            PrintItem(child, directorySize, sizeIndent, childLevel, isChildLast, newParentLastList, ref skippedCount);
         }
     }
     

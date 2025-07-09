@@ -5,7 +5,7 @@ public static class ScanUtils
     public static async Task Scan(string path)
     {
         Stopwatch stopwatch = Stopwatch.StartNew();
-        (long directorySize, List<FileObject> fileObjects) = await ScanDirectoryAsync(path);
+        (long directorySize, List<FileObject> fileObjects) = await ScanDirectoryAsync(path, Options.Depth);
         stopwatch.Stop();
             
         PrintUtils.PrintDirectory(path, directorySize, fileObjects, out int skippedCount);
@@ -19,15 +19,31 @@ public static class ScanUtils
         
         Program.CurrentDirectory = path;
     }
+
+    private static async Task<(long totalSize, List<FileObject> fileObjects)> ScanDirectoryAsync(string directoryPath, byte depth)
+    {
+        return await ScanDirectoryInternalAsync(directoryPath, depth);
+    }
     
-    private static async Task<(long totalSize, List<FileObject> fileObjects)> ScanDirectoryAsync(string directoryPath)
+    private static async Task<(long totalSize, List<FileObject> fileObjects)> ScanDirectoryInternalAsync(string directoryPath, byte remainingDepth)
     {
         List<FileObject> fileObjects = new();
         object fileLock = new();
         long totalSize = 0;
         
-        string[] files = Directory.GetFiles(directoryPath);
-        string[] folders = Directory.GetDirectories(directoryPath);
+        string[] files;
+        string[] folders;
+        
+        try
+        {
+            files = Directory.GetFiles(directoryPath);
+            folders = Directory.GetDirectories(directoryPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"{ConsoleColors.Red}Access Error -> '{directoryPath}'\n{ex.Message}{ConsoleColors.Reset}");
+            return (0, fileObjects);
+        }
 
         Parallel.ForEach(files, new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount }, file =>
         {
@@ -46,7 +62,7 @@ public static class ScanUtils
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"{ConsoleColors.Red}Error -> {file}\n{ex.Message}{ConsoleColors.Reset}");
+                Console.WriteLine($"{ConsoleColors.Red}Error -> '{file}'\n{ex.Message}{ConsoleColors.Reset}");
             }
         });
         
@@ -59,6 +75,12 @@ public static class ScanUtils
                 
                 FileObject folderObject = new FileObject(directoryInfo.Name, true, folder, size);
 
+                if (remainingDepth > 0)
+                {
+                    (long _, List<FileObject> children) = await ScanDirectoryInternalAsync(folder, (byte)(remainingDepth - 1));
+                    folderObject.Children.AddRange(children);
+                }
+                
                 lock (fileLock)
                 {
                     fileObjects.Add(folderObject);
