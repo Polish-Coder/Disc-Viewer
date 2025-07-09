@@ -17,6 +17,7 @@ public static class CommandSystem
         Register(new GotoCommand());
         Register(new BackCommand());
         Register(new SetCommand());
+        Register(new RescanCommand());
     }
 
     public static Command? GetCommand(string name)
