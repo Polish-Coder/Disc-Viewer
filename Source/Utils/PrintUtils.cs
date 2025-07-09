@@ -10,7 +10,8 @@ public static class PrintUtils
         int itemsCount = displayedFiles.Length;
         skippedCount = baseCount - itemsCount;
 
-        int sizeIndent = itemsCount != 0 ? Math.Max(displayedFiles.Max(x => x.Name.Length), directory.Length) + 5 : 0;
+        int longestName = Math.Max(GetMaxNameLength(displayedFiles), directory.Length);
+        int sizeIndent = itemsCount != 0 ? longestName + 8 : 0;
 
         string directoryName = $"{ConsoleColors.Blue}{directory}{ConsoleColors.Reset}";
         string directorySizeText = $"{ConsoleColors.Yellow}{GetSizeText(directorySize)}";
@@ -78,6 +79,29 @@ public static class PrintUtils
             
             PrintItem(child, directorySize, sizeIndent, childLevel, isChildLast, newParentLastList, ref skippedCount);
         }
+    }
+
+    private static int GetMaxNameLength(IEnumerable<FileObject> fileObjects)
+    {
+        int max = 0;
+        Stack<(FileObject item, int depth)> stack = new(fileObjects.Select(x => (x, 0)));
+
+        while (stack.Count > 0)
+        {
+            (FileObject item, int depth) = stack.Pop();
+            
+            if (item.SizeInBytes < Options.MinSize) continue;
+            
+            int nameLength = item.Name.Length + depth * 4;
+            max = Math.Max(max, nameLength);
+            
+            foreach (FileObject child in item.Children)
+            {
+                stack.Push((child, depth + 1));
+            }
+        }
+
+        return max;
     }
     
     private static string GetSizeText(float sizeInBytes)
