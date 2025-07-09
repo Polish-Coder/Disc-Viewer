@@ -16,7 +16,7 @@ public static class PrintUtils
 
         string directoryName = $"{Bold}{BrightBlue}{directory}{Reset}";
         string directorySizeText = $"{Yellow}{GetSizeText(directorySize)}";
-        int lineLength = itemsCount != 0 ? sizeIndent - directoryName.Length + 10 : 5;
+        int lineLength = itemsCount != 0 ? sizeIndent - directoryName.Length + 12 : 5;
         string line = new string(ConsoleSymbols.Line[0], lineLength);
         Console.WriteLine($"{ConsoleSymbols.Folder} {directoryName} {line} {directorySizeText}{Reset}");
 
