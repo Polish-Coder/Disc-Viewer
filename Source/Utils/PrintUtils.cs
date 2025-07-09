@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using static ConsoleColors;
 
 public static class PrintUtils
 {
@@ -13,22 +14,22 @@ public static class PrintUtils
         int longestName = Math.Max(GetMaxNameLength(displayedFiles), directory.Length);
         int sizeIndent = itemsCount != 0 ? longestName + 8 : 0;
 
-        string directoryName = $"{ConsoleColors.Blue}{directory}{ConsoleColors.Reset}";
-        string directorySizeText = $"{ConsoleColors.Yellow}{GetSizeText(directorySize)}";
+        string directoryName = $"{Bold}{BrightBlue}{directory}{Reset}";
+        string directorySizeText = $"{Yellow}{GetSizeText(directorySize)}";
         int lineLength = itemsCount != 0 ? sizeIndent - directoryName.Length + 10 : 5;
         string line = new string(ConsoleSymbols.Line[0], lineLength);
-        Console.WriteLine($"{ConsoleSymbols.Folder} {directoryName} {line} {directorySizeText}{ConsoleColors.Reset}");
+        Console.WriteLine($"{ConsoleSymbols.Folder} {directoryName} {line} {directorySizeText}{Reset}");
 
         if (baseCount == 0)
         {
-            Console.WriteLine($"{ConsoleColors.Yellow}This directory is empty...{ConsoleColors.Reset}");
+            Console.WriteLine($"{BrightYellow}This directory is empty...{Reset}");
             skippedCount = 0;
             return;
         }
         
         if (itemsCount == 0)
         {
-            Console.WriteLine($"{ConsoleColors.Yellow}Nothing to display - all item were excluded based on the current options.{ConsoleColors.Reset}");
+            Console.WriteLine($"{BrightYellow}Nothing to display - all item were excluded based on the current options.{Reset}");
             return;
         }
         
@@ -60,11 +61,12 @@ public static class PrintUtils
         string icon = item.IsAccessible
             ? item.IsDirectory ? ConsoleSymbols.Folder : ConsoleSymbols.File
             : ConsoleSymbols.Locked;
-        string fileName = $"{ConsoleColors.Cyan}{item.Name.PadRight(sizeIndent - treeSymbol.Length - 1)}";
-        string fileSize = $"{ConsoleColors.Yellow}{GetSizeText(item.SizeInBytes),-percentageIndent}";
+        string nameColor = item.IsAccessible ? Cyan : Gray;
+        string fileName = $"{nameColor}{item.Name.PadRight(sizeIndent - treeSymbol.Length - 1)}";
+        string fileSize = $"{Yellow}{GetSizeText(item.SizeInBytes),-percentageIndent}";
         string filePercentage = $"[ {percentage:F1}% ]";
         
-        Console.WriteLine($"{treeSymbol} {icon} {fileName} {fileSize}{ConsoleColors.Reset}{filePercentage}");
+        Console.WriteLine($"{treeSymbol} {icon} {fileName} {fileSize}{Reset}{filePercentage}");
 
         List<FileObject> children = item.Children.Where(x => x.SizeInBytes >= Options.MinSize).ToList();
         int childCount = children.Count;
