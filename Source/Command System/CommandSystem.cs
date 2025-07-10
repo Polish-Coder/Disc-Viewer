@@ -19,6 +19,7 @@ public static class CommandSystem
         Register(new SetCommand());
         Register(new RescanCommand());
         Register(new OpenCommand());
+        Register(new DrivesCommand());
     }
 
     public static Command? GetCommand(string name)

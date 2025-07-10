@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using static ConsoleColors;
+using static ConsoleSymbols;
 
 public static class PrintUtils
 {
@@ -17,8 +18,8 @@ public static class PrintUtils
         string directoryName = $"{Bold}{BrightBlue}{directory}{Reset}";
         string directorySizeText = $"{Yellow}{GetSizeText(directorySize)}";
         int lineLength = itemsCount != 0 ? sizeIndent - directoryName.Length + 12 : 5;
-        string line = new string(ConsoleSymbols.Line[0], lineLength);
-        Console.WriteLine($"{ConsoleSymbols.Folder} {directoryName} {line} {directorySizeText}{Reset}");
+        string line = new string(Line[0], lineLength);
+        Console.WriteLine($"{Folder} {directoryName} {line} {directorySizeText}{Reset}");
 
         if (baseCount == 0)
         {
@@ -45,7 +46,7 @@ public static class PrintUtils
     private static void PrintItem(FileObject item, long directorySize, int sizeIndent, byte level, bool isLast, List<bool> parentLastList, ref int skippedCount)
     {
         const int percentageIndent = 10;
-        const string pipe = ConsoleSymbols.TreePipe + "   ";
+        const string pipe = TreePipe + "   ";
         const string empty = "    ";
         
         float percentage = item.SizeInBytes / directorySize * 100;
@@ -57,10 +58,10 @@ public static class PrintUtils
             pipes.Append(isParentLast ? empty : pipe);
         }
         
-        string treeSymbol = pipes + (isLast ? ConsoleSymbols.TreeEnd : ConsoleSymbols.TreeBranch);
+        string treeSymbol = pipes + (isLast ? TreeEnd : TreeBranch);
         string icon = item.IsAccessible
-            ? item.IsDirectory ? ConsoleSymbols.Folder : ConsoleSymbols.File
-            : ConsoleSymbols.Locked;
+            ? item.IsDirectory ? Folder : ConsoleSymbols.File
+            : Locked;
         string nameColor = item.IsAccessible ? Cyan : Gray;
         string fileName = $"{nameColor}{item.Name.PadRight(sizeIndent - treeSymbol.Length - 1)}";
         string fileSize = $"{Yellow}{GetSizeText(item.SizeInBytes),-percentageIndent}";
@@ -108,7 +109,7 @@ public static class PrintUtils
         return max;
     }
     
-    private static string GetSizeText(float sizeInBytes)
+    public static string GetSizeText(float sizeInBytes)
     {
         string size;
 
@@ -133,5 +134,24 @@ public static class PrintUtils
         }
 
         return size;
+    }
+
+    public static void PrintBar(long value, long max, int barWidth = 30, bool colored = false)
+    {
+        float percentage = (float)value / max;
+        int filled = (int)(percentage * barWidth);
+        int empty = barWidth - filled;
+
+        string color = colored ? percentage switch
+        {
+            < 0.65f => Green,
+            < 0.9f => Yellow,
+            _ => Red
+        } : "";
+        
+        string bar = color + string.Concat(Enumerable.Repeat(FullBlock, filled)) +
+                     Gray + string.Concat(Enumerable.Repeat(FullBlock, empty));
+        
+        Console.WriteLine(bar + Reset);
     }
 }
