@@ -52,7 +52,7 @@ public static class PrintUtils
         const string pipe = VerticalLine + "   ";
         const string empty = "    ";
         
-        float percentage = item.SizeInBytes / directorySize * 100;
+        float percentage = (float)item.SizeInBytes / directorySize * 100;
 
         StringBuilder pipes = new StringBuilder();
 
