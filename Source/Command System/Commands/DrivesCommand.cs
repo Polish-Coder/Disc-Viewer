@@ -60,11 +60,11 @@ public class DrivesCommand : Command
             string freeSpaceText = $"Free: {PrintUtils.GetSizeText(freeSpace)}";
             string percentageText = $"{percentage:P}";
             
-            Console.WriteLine($"{name}{drive.DriveFormat.PadLeft(barWidth - driveName.Length - icon.Length - 1)}");
-            Console.WriteLine($"{usedText}{totalText.PadLeft(barWidth - usedText.Length)}");
-            PrintUtils.PrintBar(usedSpace, totalSize, barWidth, true);
-            Console.WriteLine($"{freeSpaceText}{percentageText.PadLeft(barWidth - freeSpaceText.Length)}");
-            Console.WriteLine();
+            PrintUtils.PrintFrame(barWidth + 2,
+                $"{name}{drive.DriveFormat.PadLeft(barWidth - driveName.Length - icon.Length - 1)}",
+                $"{usedText}{totalText.PadLeft(barWidth - usedText.Length)}",
+                PrintUtils.CreateBar(usedSpace, totalSize, barWidth, true),
+                $"{freeSpaceText}{percentageText.PadLeft(barWidth - freeSpaceText.Length)}");
         }
         
         return Task.CompletedTask;

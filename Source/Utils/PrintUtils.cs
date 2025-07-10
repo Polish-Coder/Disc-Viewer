@@ -18,7 +18,7 @@ public static class PrintUtils
         string directoryName = $"{Bold}{BrightBlue}{directory}{Reset}";
         string directorySizeText = $"{Yellow}{GetSizeText(directorySize)}";
         int lineLength = itemsCount != 0 ? sizeIndent - directoryName.Length + 12 : 5;
-        string line = new string(Line[0], lineLength);
+        string line = new string(HorizontalLine[0], lineLength);
         Console.WriteLine($"{Folder} {directoryName} {line} {directorySizeText}{Reset}");
 
         if (baseCount == 0)
@@ -46,7 +46,7 @@ public static class PrintUtils
     private static void PrintItem(FileObject item, long directorySize, int sizeIndent, byte level, bool isLast, List<bool> parentLastList, ref int skippedCount)
     {
         const int percentageIndent = 10;
-        const string pipe = TreePipe + "   ";
+        const string pipe = VerticalLine + "   ";
         const string empty = "    ";
         
         float percentage = item.SizeInBytes / directorySize * 100;
@@ -136,7 +136,7 @@ public static class PrintUtils
         return size;
     }
 
-    public static void PrintBar(long value, long max, int barWidth = 30, bool colored = false)
+    public static string CreateBar(long value, long max, int barWidth = 30, bool colored = false)
     {
         float percentage = (float)value / max;
         int filled = (int)(percentage * barWidth);
@@ -149,9 +149,21 @@ public static class PrintUtils
             _ => Red
         } : "";
         
-        string bar = color + string.Concat(Enumerable.Repeat(FullBlock, filled)) +
-                     Gray + string.Concat(Enumerable.Repeat(FullBlock, empty));
+        return color + string.Concat(Enumerable.Repeat(FullBlock, filled)) +
+               Gray + string.Concat(Enumerable.Repeat(FullBlock, empty)) + Reset;
+    }
+
+    public static void PrintFrame(int width, params string[] content)
+    {
+        string horizontalLine = string.Concat(Enumerable.Repeat(HorizontalLine, width));
         
-        Console.WriteLine(bar + Reset);
+        Console.WriteLine(CornerDownRight + horizontalLine + CornerDownLeft);
+        
+        foreach (string line in content)
+        {
+            Console.WriteLine($"{VerticalLine} {line} {VerticalLine}");
+        }
+        
+        Console.WriteLine(CornerUpRight + horizontalLine + CornerUpLeft);
     }
 }
