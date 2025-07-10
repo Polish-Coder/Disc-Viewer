@@ -139,6 +139,11 @@ public static class PrintUtils
         return size;
     }
 
+    public static string RepeatText(string text, int count)
+    {
+        return string.Concat(Enumerable.Repeat(text, count));
+    }
+
     public static int VisibleLength(string input)
     {
         string stripped = AnsiRegex.Replace(input, "");
@@ -166,21 +171,38 @@ public static class PrintUtils
             _ => Red
         } : "";
         
-        return color + string.Concat(Enumerable.Repeat(FullBlock, filled)) +
-               Gray + string.Concat(Enumerable.Repeat(FullBlock, empty)) + Reset;
+        return color + RepeatText(FullBlock, filled) + Gray + RepeatText(FullBlock, empty) + Reset;
     }
 
+    public static void PrintTitledFrame(string title, params string[] content)
+    {
+        int width = content.Max(VisibleLength) + 2;
+        PrintFrame(title, width, content);
+    }
+    
     public static void PrintFrame(params string[] content)
     {
         int width = content.Max(VisibleLength) + 2;
-        PrintFrame(width, content);
+        PrintFrame("", width, content);
     }
     
-    public static void PrintFrame(int width, params string[] content)
+    public static void PrintFrame(string title, int width, params string[] content)
     {
-        string horizontalLine = string.Concat(Enumerable.Repeat(HorizontalLine, width));
+        string upperLine;
+        string lowerLine = RepeatText(HorizontalLine, width);
         
-        Console.WriteLine(CornerDownRight + horizontalLine + CornerDownLeft);
+        if (!string.IsNullOrEmpty(title))
+        {
+            int titleLength = VisibleLength(title);
+            int lineLength = width - titleLength - 3;
+            upperLine = $"{HorizontalLine} {title} {RepeatText(HorizontalLine, lineLength)}";
+        }
+        else
+        {
+            upperLine = lowerLine;
+        }
+        
+        Console.WriteLine(CornerDownRight + upperLine + CornerDownLeft);
         
         foreach (string line in content)
         {
@@ -190,6 +212,6 @@ public static class PrintUtils
             Console.WriteLine($"{VerticalLine} {ApplyPadding(line, 0, padding)} {VerticalLine}");
         }
         
-        Console.WriteLine(CornerUpRight + horizontalLine + CornerUpLeft);
+        Console.WriteLine(CornerUpRight + lowerLine + CornerUpLeft);
     }
 }

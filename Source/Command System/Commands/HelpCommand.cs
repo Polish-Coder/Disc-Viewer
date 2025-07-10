@@ -8,11 +8,11 @@ public class HelpCommand : Command
     
     public override Task Execute(string[] args)
     {
-        Console.WriteLine("Available commands:");
-
         Command[] commands = CommandSystem.GetAllCommands().OrderBy(x => x.Name).ToArray();
         
         int indentLevel = commands.Max(x => x.Name.Length + x.Usage.Length) + 5;
+        
+        List<string> commandList = new List<string>();
         
         foreach (Command command in commands)
         {
@@ -20,8 +20,10 @@ public class HelpCommand : Command
             string formatted = command.Usage.Length > 0
                 ? padded.Replace(command.Usage, $"{ConsoleColors.Gray}{command.Usage}{ConsoleColors.Reset}")
                 : padded;
-            Console.WriteLine($"  {formatted}{command.Description}");
+            commandList.Add($"{formatted}{command.Description}");
         }
+        
+        PrintUtils.PrintTitledFrame("Available commands", commandList.ToArray());
         
         return Task.CompletedTask;
     }
