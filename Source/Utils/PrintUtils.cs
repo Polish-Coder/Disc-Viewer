@@ -1,9 +1,12 @@
 ﻿using System.Text;
+using System.Text.RegularExpressions;
 using static ConsoleColors;
 using static ConsoleSymbols;
 
 public static class PrintUtils
 {
+    private static readonly Regex AnsiRegex = new(@"\x1B\[[0-9;]*[A-Za-z]", RegexOptions.Compiled);
+    
     public static void PrintDirectory(string directory, long directorySize, List<FileObject> fileObjects, out int skippedCount)
     {
         int baseCount = fileObjects.Count;
@@ -136,6 +139,20 @@ public static class PrintUtils
         return size;
     }
 
+    public static int VisibleLength(string input)
+    {
+        string stripped = AnsiRegex.Replace(input, "");
+        return stripped.Length;
+    }
+
+    public static string ApplyPadding(string input, int left, int right)
+    {
+        left = Math.Max(left, 0);
+        right = Math.Max(right, 0);
+
+        return new string(' ', left) + input + new string(' ', right);
+    }
+
     public static string CreateBar(long value, long max, int barWidth = 30, bool colored = false)
     {
         float percentage = (float)value / max;
@@ -153,6 +170,12 @@ public static class PrintUtils
                Gray + string.Concat(Enumerable.Repeat(FullBlock, empty)) + Reset;
     }
 
+    public static void PrintFrame(params string[] content)
+    {
+        int width = content.Max(VisibleLength) + 2;
+        PrintFrame(width, content);
+    }
+    
     public static void PrintFrame(int width, params string[] content)
     {
         string horizontalLine = string.Concat(Enumerable.Repeat(HorizontalLine, width));
@@ -161,7 +184,10 @@ public static class PrintUtils
         
         foreach (string line in content)
         {
-            Console.WriteLine($"{VerticalLine} {line} {VerticalLine}");
+            int lineLength = VisibleLength(line);
+            int padding = width > lineLength ? width - lineLength - 2 : 0;
+            
+            Console.WriteLine($"{VerticalLine} {ApplyPadding(line, 0, padding)} {VerticalLine}");
         }
         
         Console.WriteLine(CornerUpRight + horizontalLine + CornerUpLeft);

@@ -60,7 +60,7 @@ public class DrivesCommand : Command
             string freeSpaceText = $"Free: {PrintUtils.GetSizeText(freeSpace)}";
             string percentageText = $"{percentage:P}";
             
-            PrintUtils.PrintFrame(barWidth + 2,
+            PrintUtils.PrintFrame(
                 $"{name}{drive.DriveFormat.PadLeft(barWidth - driveName.Length - icon.Length - 1)}",
                 $"{usedText}{totalText.PadLeft(barWidth - usedText.Length)}",
                 PrintUtils.CreateBar(usedSpace, totalSize, barWidth, true),
