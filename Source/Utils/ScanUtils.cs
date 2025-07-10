@@ -3,6 +3,17 @@ using System.Diagnostics;
 
 public static class ScanUtils
 {
+    private static readonly EnumerationOptions EnumerationOptions = new()
+    {
+        IgnoreInaccessible = true,
+        RecurseSubdirectories = true
+    };
+
+    private static readonly ParallelOptions ParallelOptions = new()
+    {
+        MaxDegreeOfParallelism = Environment.ProcessorCount
+    };
+
     public static async Task Scan(string path)
     {
         Stopwatch stopwatch = Stopwatch.StartNew();
@@ -59,7 +70,7 @@ public static class ScanUtils
             return (0, new List<FileObject>());
         }
 
-        Parallel.ForEach(files, new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount }, file =>
+        Parallel.ForEach(files, ParallelOptions, file =>
         {
             try
             {
@@ -123,14 +134,18 @@ public static class ScanUtils
         return (totalSize, allItems);
     }
     
-    private static async Task<long> GetDirectorySizeAsync(DirectoryInfo directoryInfo)
+    private static Task<long> GetDirectorySizeAsync(DirectoryInfo directoryInfo)
     {
-        return await Task.Run(() =>
-            directoryInfo.EnumerateFiles("*", new EnumerationOptions
-            {
-                IgnoreInaccessible = true,
-                RecurseSubdirectories = true
-            }).Sum(file => FileUtils.GetSize(file.FullName)));
+        IEnumerable<FileInfo> files = directoryInfo.EnumerateFiles("*", EnumerationOptions);
+
+        long totalSize = 0;
+        
+        Parallel.ForEach(files, ParallelOptions, file =>
+        {
+            Interlocked.Add(ref totalSize, FileUtils.GetSize(file.FullName));
+        });
+        
+        return Task.FromResult(totalSize);
     }
 
     private static void SortItems(List<FileObject> items)
